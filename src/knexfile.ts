@@ -1,9 +1,10 @@
 import { Knex } from "knex";
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
-const config: { [key:string]: Knex.Config} = {
+const config: { [key: string]: Knex.Config } = {
     development: {
         client: 'mysql2',
         connection: {
@@ -21,4 +22,4 @@ const config: { [key:string]: Knex.Config} = {
     },
 };
 
-module.exports = config;
+export default config;
