@@ -1,43 +1,43 @@
-import { TransactionModel } from '../models/Transaction';
 import { UserModel } from '../models/User';
-import { Transaction } from '../models/Transaction';
 
-export class TransactionService {
-  private transactionModel: TransactionModel;
+class TransactionService {
   private userModel: UserModel;
 
   constructor() {
-    this.transactionModel = new TransactionModel();
     this.userModel = new UserModel();
   }
 
-  public async fundAccount(userId: number, amount: number): Promise<Transaction> {
+  public async fundAccount(userId: string, amount: number): Promise<void> {
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
     user.balance += amount;
     await this.userModel.update(user);
-    return this.transactionModel.create({ user_id: userId, type: 'fund', amount });
   }
 
-  public async transferFunds(senderId: number, recipientEmail: string, amount: number): Promise<Transaction> {
-    const sender = await this.userModel.findById(senderId);
-    const recipient = await this.userModel.findByEmail(recipientEmail);
-    if (!sender || !recipient) {
-      throw new Error('User not found');
+  public async transferFunds(fromUserId: string, toUserId: string, amount: number): Promise<void> {
+    const fromUser = await this.userModel.findById(fromUserId);
+    const toUser = await this.userModel.findById(toUserId);
+
+    if (!fromUser) {
+      throw new Error('Sender not found');
     }
-    if (sender.balance < amount) {
+    if (!toUser) {
+      throw new Error('Recipient not found');
+    }
+    if (fromUser.balance < amount) {
       throw new Error('Insufficient funds');
     }
-    sender.balance -= amount;
-    recipient.balance += amount;
-    await this.userModel.update(sender);
-    await this.userModel.update(recipient);
-    return this.transactionModel.create({ user_id: senderId, type: 'transfer', amount, recipient_id: recipient.id });
+
+    fromUser.balance -= amount;
+    toUser.balance += amount;
+
+    await this.userModel.update(fromUser);
+    await this.userModel.update(toUser);
   }
 
-  public async withdrawFunds(userId: number, amount: number): Promise<Transaction> {
+  public async withdrawFunds(userId: string, amount: number): Promise<void> {
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new Error('User not found');
@@ -47,7 +47,7 @@ export class TransactionService {
     }
     user.balance -= amount;
     await this.userModel.update(user);
-    return this.transactionModel.create({ user_id: userId, type: 'withdraw', amount });
   }
-
 }
+
+export default new TransactionService();
