@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { UserModel } from '../models/User';
-import { User } from '../models/User';
+import bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
+import { UserModel, User } from '../models/User';
 
 export class UserService {
   private userModel: UserModel;
@@ -9,12 +10,32 @@ export class UserService {
     this.userModel = new UserModel();
   }
 
-  public async createUser(user: Omit<User, 'id'>): Promise<User | null> {
+  public async createUser(user: Omit<User, 'id' | 'token'>): Promise<User | null> {
     const isBlacklisted = await this.checkKarmaList(user.email);
     if (isBlacklisted) {
       throw new Error('User is blacklisted');
     }
+    user.password = await bcrypt.hash(user.password, 10);
     return this.userModel.create(user);
+  }
+
+  public async login(email: string, password: string): Promise<string | null> {
+    const user = await this.userModel.findByEmail(email);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error('Invalid password');
+    }
+    const token = uuidv4();
+    user.token = token;
+    await this.userModel.update(user);
+    return token;
+  }
+
+  public async findByToken(token: string): Promise<User | null> {
+    return await this.userModel.findByToken(token);
   }
 
   private async checkKarmaList(identity: string): Promise<boolean> {
