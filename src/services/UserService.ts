@@ -47,17 +47,15 @@ export class UserService {
       });
 
       if (response.data) {
-        return true; // The user is blacklisted
+        return true; 
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        // Axios specific error handling
         if (error.response && error.response.status === 404) {
-          return false; // The user is not blacklisted
+          return false; 
         }
         console.error('Axios error checking Karma List:', error.message);
       } else if (error instanceof Error) {
-        // Generic error handling
         console.error('Error checking Karma List:', error.message);
       } else {
         console.error('Unexpected error checking Karma List:', error);
