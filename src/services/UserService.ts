@@ -1,7 +1,7 @@
-import axios from 'axios';
 import bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 import { UserModel, User } from '../models/User';
+import { v4 as uuidv4 } from 'uuid';
 
 export class UserService {
   private userModel: UserModel;
@@ -15,30 +15,13 @@ export class UserService {
     if (isBlacklisted) {
       throw new Error('User is blacklisted');
     }
-    user.password = await bcrypt.hash(user.password, 10);
-    return this.userModel.create(user);
-  }
-
-  public async login(email: string, password: string): Promise<string | null> {
-    const user = await this.userModel.findByEmail(email);
-    if (!user) {
-      throw new Error('User not found');
-    }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new Error('Invalid password');
-    }
-    const token = uuidv4();
-    user.token = token;
-    await this.userModel.update(user);
-    return token;
-  }
-
-  public async findByToken(token: string): Promise<User | null> {
-    return await this.userModel.findByToken(token);
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const newUser = await this.userModel.create({ ...user, password: hashedPassword });
+    return newUser;
   }
 
   private async checkKarmaList(identity: string): Promise<boolean> {
+
     try {
       const response = await axios.get(`https://adjutor.lendsqr.com/v2/verification/karma/${identity}`, {
         headers: {
@@ -64,5 +47,25 @@ export class UserService {
     }
 
     return false;
+  }
+  public async loginUser(email: string, password: string): Promise<string> {
+    const user = await this.userModel.findByEmail(email);
+    if (!user) {
+      throw new Error('Invalid email or password');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error('Invalid email or password');
+    }
+
+    const token = uuidv4();
+    await this.userModel.update({ ...user, token });
+    return token;
+  }
+
+  public async findByToken(token: string): Promise<User | null> {
+    const user = await this.userModel.findByToken(token);
+    return user;
   }
 }
