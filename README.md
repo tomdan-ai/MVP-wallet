@@ -1,5 +1,3 @@
-Here's a detailed README for your application, following the specified format:
-
 <a name="readme-top"></a>
 
 <div align="center">
