@@ -1,6 +1,6 @@
 import { UserModel } from '../models/User';
 
-class TransactionService {
+export class TransactionService {
   private userModel: UserModel;
 
   constructor() {
