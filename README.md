@@ -31,7 +31,8 @@ Here's a detailed README for your application, following the specified format:
 - [🙏 Acknowledgements](#acknowledgements)
 - [❓ FAQ (OPTIONAL)](#faq)
 - [📝 License](#license)
-- [📊 ER Diagram and SQL](#er-diagram-and-sql) <!-- New Section -->
+- [📊 ER Diagram and SQL](#er-diagram-and-sql) 
+- [🔑 API](#API)
 
 # 📖 MVP Wallet Application <a name="about-project"></a>
 
@@ -200,6 +201,12 @@ I would like to thank all contributors and the open-source community for their i
   );
 
 To access get full SQL [Click Here](./src/mysql/wallet_service%20ERD_mysql_create.sql)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+# 🔑 API <a name="API"></a>
+
+### All API Docs are available in the wallet service [API Documentaion](./API.md)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
