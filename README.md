@@ -3,7 +3,7 @@ Here's a detailed README for your application, following the specified format:
 <a name="readme-top"></a>
 
 <div align="center">
-  <img src="murple_logo.png" alt="logo" width="140"  height="auto" />
+  <img src="./assets/lendsqr.jpeg" alt="logo" width="140"  height="auto" />
   <br/>
 
   <h3><b>MVP Wallet Application</b></h3>
@@ -31,10 +31,11 @@ Here's a detailed README for your application, following the specified format:
 - [🙏 Acknowledgements](#acknowledgements)
 - [❓ FAQ (OPTIONAL)](#faq)
 - [📝 License](#license)
+- [📊 ER Diagram and SQL](#er-diagram-and-sql) <!-- New Section -->
 
 # 📖 MVP Wallet Application <a name="about-project"></a>
 
-**MVP Wallet Application** is a full-stack web application designed to manage users' transactions, including funding accounts, transferring funds, and withdrawing funds. The application ensures secure and efficient handling of all financial operations, providing a reliable platform for users.
+**MVP Wallet Application** is an MVP waller service  designed to manage users' transactions, including funding accounts, transferring funds, and withdrawing funds. The application ensures secure and efficient handling of all financial operations, providing a reliable platform for users.
 
 ## 🛠 Built With <a name="built-with"></a>
 
@@ -43,7 +44,7 @@ Here's a detailed README for your application, following the specified format:
 <details>
   <summary>Client</summary>
   <ul>
-    <li>None (API Only)</li>
+    <li>None (<a href="https://api.adjutor.io/">Adjutor API</a> Only)</li>
   </ul>
 </details>
 
@@ -59,7 +60,7 @@ Here's a detailed README for your application, following the specified format:
 <details>
 <summary>Database</summary>
   <ul>
-    <li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
+    <li><a href="https://www.mysql.com/">MySQL</a></li>
     <li><a href="https://knexjs.org/">Knex.js</a></li>
   </ul>
 </details>
@@ -110,7 +111,7 @@ Install the project dependencies:
 To run the project, execute the following command:
 
 ```sh
-  npm start
+  npm run dev
 ```
 
 ### Run tests
@@ -138,7 +139,7 @@ You can deploy this project using any cloud provider that supports Node.js appli
 
 ## 🔭 Future Features <a name="future-features"></a>
 
-- **User Authentication**: Implement user authentication and authorization for more secure transactions.
+- **User Authentication**: Implement more validations user authentication and authorization for more secure transactions.
 - **Transaction History**: Add a feature for users to view their transaction history.
 - **Email Notifications**: Implement email notifications for successful transactions.
 
@@ -173,6 +174,32 @@ I would like to thank all contributors and the open-source community for their i
 - **How can I contribute to the project?**
 
   - You can contribute by opening issues, providing feedback, and submitting pull requests.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+# 📊 ER Diagram and SQL <a name="er-diagram-and-sql"></a>
+
+## ER Diagram
+
+
+![ER Diagram](./assets/ERD.png)
+
+## SQL Schema
+
+### Tables
+
+- **Users**
+  ```sql
+  CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    balance INTEGER DEFAULT 0,
+    karma INTEGER DEFAULT 0
+  );
+
+To access get full SQL [Click Here](./src/mysql/wallet_service%20ERD_mysql_create.sql)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
